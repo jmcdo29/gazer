@@ -1,0 +1,14 @@
+version: '3'
+name: gazer
+
+services:
+  db:
+    build:
+      dockerfile: apps/postgres/Dockerfile
+      context: '.'
+    ports:
+      - '35432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gazer

@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@gazer/db/migrations": ["libs/db/migrations/src/index.ts"],
       "@gazer/docker/plugin": ["libs/plugins/docker/src/index.ts"]
     }
   },
