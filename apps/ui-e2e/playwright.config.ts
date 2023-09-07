@@ -25,7 +25,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm exec nx serve gazer-ui',
+    command: 'pnpm exec nx serve ui',
     url: 'http://localhost:4200',
     reuseExistingServer: !process.env.CI,
     cwd: workspaceRoot,

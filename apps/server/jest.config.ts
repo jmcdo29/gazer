@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'gazer-server',
+  displayName: 'server',
   preset: '../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }]
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/gazer-server'
+  coverageDirectory: '../../coverage/apps/server',
 };
