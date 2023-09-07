@@ -16,7 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@gazer/db/migrations": ["libs/db/migrations/src/index.ts"],
-      "@gazer/docker/plugin": ["libs/plugins/docker/src/index.ts"]
+      "@gazer/docker/plugin": ["libs/plugins/docker/src/index.ts"],
+      "@gazer/server/config": ["libs/server/config/src/index.ts"],
+      "@gazer/server/kysely": ["libs/server/kysely/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

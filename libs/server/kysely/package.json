@@ -1,0 +1,11 @@
+{
+  "name": "@unteris/server/kysely",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/pg": "^8.10.2"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  }
+}

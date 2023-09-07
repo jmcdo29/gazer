@@ -8,10 +8,10 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn('url', 'text', (col) => col.notNull())
     .addColumn('description', 'text')
     .addColumn('name', 'text', (col) => col.notNull())
-    .addColumn('index', 'integer', (col) => col.unique().notNull().autoIncrement())
+    .addColumn('index', 'serial')
     .execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
   await db.schema.dropTable('image').execute();
-}
+};
