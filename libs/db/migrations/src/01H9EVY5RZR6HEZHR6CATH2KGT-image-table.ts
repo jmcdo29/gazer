@@ -1,10 +1,13 @@
 import { Kysely } from 'kysely';
-import { kyselyUlid } from './lib';
+
+import { kyselyDefaultUlid, kyselyUlid } from './lib';
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable('image')
-    .addColumn('id', kyselyUlid, (col) => col.primaryKey())
+    .addColumn('id', kyselyUlid, (col) =>
+      col.primaryKey().defaultTo(kyselyDefaultUlid())
+    )
     .addColumn('url', 'text', (col) => col.notNull())
     .addColumn('description', 'text')
     .addColumn('name', 'text', (col) => col.notNull())
