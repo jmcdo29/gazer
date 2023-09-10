@@ -1,7 +1,8 @@
+import { Image } from '@gazer/shared/types';
 import { Generated } from 'kysely';
 
 type GeneratedId<T> = Omit<T, 'id'> & { id: Generated<string> };
 
 export interface Database {
-  image: GeneratedId<{ name: string; description: string; location: string }>;
+  image: Omit<GeneratedId<Image>, 'index'> & { index: Generated<number> };
 }

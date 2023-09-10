@@ -1,0 +1,16 @@
+{
+  "name": "server-image",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/image/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/server/image/**/*.ts"]
+      }
+    }
+  },
+  "tags": ["server"]
+}
