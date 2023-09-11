@@ -21,6 +21,7 @@
       "@gazer/server/config": ["libs/server/config/src/index.ts"],
       "@gazer/server/image": ["libs/server/image/src/index.ts"],
       "@gazer/server/kysely": ["libs/server/kysely/src/index.ts"],
+      "@gazer/server/security": ["libs/server/security/src/index.ts"],
       "@gazer/server/valibot-pipe": ["libs/server/valibot-pipe/src/index.ts"],
       "@gazer/server/zod-pipe": ["libs/server/zod-pipe/src/index.ts"],
       "@gazer/shared/types": ["libs/shared/types/src/index.ts"]

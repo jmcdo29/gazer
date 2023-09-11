@@ -1,3 +1,4 @@
+import { LoggedInGuard } from '@gazer/server/security';
 import { Image } from '@gazer/shared/types';
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import {
@@ -9,6 +10,7 @@ import {
   Patch,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 
@@ -26,6 +28,7 @@ export class ImageController {
     return this.service.getImages();
   }
 
+  @UseGuards(LoggedInGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async addImage(
@@ -35,6 +38,7 @@ export class ImageController {
     return this.service.addImage(body.data, file);
   }
 
+  @UseGuards(LoggedInGuard)
   @Patch(':id')
   async updateImage(
     @Param() param: ImageIdParamDto,
@@ -43,6 +47,7 @@ export class ImageController {
     return this.service.updateImage(param.data.id, body.data);
   }
 
+  @UseGuards(LoggedInGuard)
   @Delete(':id')
   async removeImage(@Param() param: ImageIdParamDto) {
     return this.service.removeImage(param.data.id);
