@@ -18,13 +18,7 @@
               }
             ]
           }
-        ]
-      }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {
+        ],
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
         "@typescript-eslint/no-unused-vars": [
@@ -32,6 +26,11 @@
           { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
         ]
       }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],
