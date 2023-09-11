@@ -16,7 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn('type', 'text', (col) => col.defaultTo('session').notNull())
     .addColumn('value', 'text', (col) => col.primaryKey())
     .addColumn('expires_at', 'timestamptz', (col) =>
-      col.defaultTo(sql`NOW() + '1 hour'`)
+      col.defaultTo(sql`NOW() + '1 DAY'`)
     )
     .addColumn('user_id', kyselyUlid, (col) =>
       col.references('user_account.id').onDelete('cascade')

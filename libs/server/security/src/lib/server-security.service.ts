@@ -33,13 +33,13 @@ export class ServerSecurityService {
           type: 'session',
           value: sessionToken,
           userId: user.id,
-          expiresAt: sql`NOW() + '1 HOUR'`,
+          expiresAt: sql`NOW() + '1 DAY'`,
         },
         {
           type: 'refresh',
           value: refreshToken,
           userId: user.id,
-          expiresAt: sql`NOW() + '1 DAY'`,
+          expiresAt: sql`NOW() + '7 DAY'`,
         },
       ])
       .execute();
