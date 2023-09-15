@@ -24,7 +24,10 @@
       "@gazer/server/security": ["libs/server/security/src/index.ts"],
       "@gazer/server/valibot-pipe": ["libs/server/valibot-pipe/src/index.ts"],
       "@gazer/server/zod-pipe": ["libs/server/zod-pipe/src/index.ts"],
-      "@gazer/shared/types": ["libs/shared/types/src/index.ts"]
+      "@gazer/shared/types": ["libs/shared/types/src/index.ts"],
+      "@gazer/ui/footer": ["libs/ui/footer/src/index.ts"],
+      "@gazer/ui/nav": ["libs/ui/nav/src/index.ts"],
+      "@gazer/ui/router": ["libs/ui/router/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
