@@ -6,14 +6,22 @@ import { randomBytes } from 'crypto';
 import { rm, writeFile } from 'fs/promises';
 import { Kysely, sql } from 'kysely';
 
+import { ImagesQuery } from './models/images-query.dto';
+
 @Injectable()
 export class ImageService {
   private readonly path = `${process.cwd()}/images`;
 
   constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
 
-  async getImages(): Promise<Image[]> {
-    return this.db.selectFrom('image').selectAll().execute();
+  async getImages(options: ImagesQuery): Promise<Image[]> {
+    const page = options.page;
+    return this.db
+      .selectFrom('image')
+      .selectAll()
+      .where('index', '>=', (page - 1) * 20)
+      .limit(20)
+      .execute();
   }
 
   async addImage(newImage: CreateImage, file: File): Promise<Image> {

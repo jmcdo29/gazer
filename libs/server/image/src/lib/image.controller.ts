@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +18,7 @@ import {
 import { ImageService } from './image.service';
 import { CreateImageDto } from './models/create-image.dto';
 import { ImageIdParamDto } from './models/image-id.dto';
+import { ImagesQueryDto } from './models/images-query.dto';
 import { UpdateImageDto } from './models/update-image.dto';
 
 @Controller('image')
@@ -24,8 +26,8 @@ export class ImageController {
   constructor(private readonly service: ImageService) {}
 
   @Get()
-  async getImages(): Promise<Image[]> {
-    return this.service.getImages();
+  async getImages(@Query() query: ImagesQueryDto): Promise<Image[]> {
+    return this.service.getImages(query.data);
   }
 
   @UseGuards(LoggedInGuard)
