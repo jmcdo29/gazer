@@ -1,3 +1,4 @@
+import { ServerConfigModule, ServerConfigService } from '@gazer/server/config';
 import { Inject, Module } from '@nestjs/common';
 import {
   createProviderToken,
@@ -5,7 +6,6 @@ import {
   OgmaService,
 } from '@ogma/nestjs-module';
 import { style } from '@ogma/styler';
-import { ServerConfigModule, ServerConfigService } from '@gazer/server/config';
 import {
   CamelCasePlugin,
   Kysely,
@@ -14,6 +14,7 @@ import {
   PostgresDialect,
 } from 'kysely';
 import { Pool } from 'pg';
+
 import {
   getKyselyConfigToken,
   getKyselyInstanceToken,
@@ -52,9 +53,12 @@ import {
               }),
             }),
             log: (event: LogEvent) => {
+              logger.silly({
+                message: 'Kysely Details',
+                query: event.query.query,
+              });
               logger.verbose({
                 message: 'Running Query',
-                query: event.query.query,
                 parameters: event.query.parameters,
                 raw: event.query.sql,
               });

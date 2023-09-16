@@ -1,7 +1,7 @@
 import { ImageModule } from '@gazer/server/image';
+import { ValidationPipe } from '@nest-lab/typeschema';
 import { Logger, Module } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { ValidationPipe } from '@nest-lab/typeschema';
 import { OgmaModule } from '@ogma/nestjs-module';
 
 import { AppController } from './app.controller';
@@ -11,7 +11,7 @@ import { AppService } from './app.service';
   imports: [
     OgmaModule.forRoot({
       application: 'Gazer Server',
-      logLevel: 'SILLY',
+      logLevel: 'VERBOSE',
     }),
     ImageModule,
   ],
