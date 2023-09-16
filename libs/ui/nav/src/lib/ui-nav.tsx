@@ -19,10 +19,15 @@ export function UiNav(_props: UiNavProps) {
     >
       <Grid container>
         <Grid xs marginLeft={'0.5em'}>
-          <Link component={RouterLink} to="/">
+          <Link component={RouterLink} to="/" display="inline-flex">
             <Typography color={theme.palette.secondary.dark} fontSize={'2em'}>
               ClippyClips
             </Typography>
+            <img
+              src="/clippy.png"
+              alt="A paperclip with eyes that kind of make it look like it hasa face"
+              height="48px"
+            />
           </Link>
         </Grid>
         <Grid xs={2} md={6} lg={9}>
@@ -35,7 +40,7 @@ export function UiNav(_props: UiNavProps) {
           marginTop={'0.5em'}
           marginRight={'0.5em'}
         >
-          <Link component={RouterLink} to="/page-2">
+          <Link component={RouterLink} to="/">
             <AccountBox fontSize="large" color={'secondary'} />
           </Link>
         </Grid>

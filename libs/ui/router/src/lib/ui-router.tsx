@@ -1,9 +1,9 @@
 import { UiFooter } from '@gazer/ui/footer';
+import { UiGallery } from '@gazer/ui/gallery';
 import { UiNav } from '@gazer/ui/nav';
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import { Link as RouterLink, Outlet, Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface UiRouterProps {}
@@ -30,27 +30,7 @@ export function UiRouter(_props: UiRouterProps) {
   return (
     <Routes>
       <Route path="/" element={<Root />}>
-        <Route
-          index
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link component={RouterLink} to="/page-2">
-                Click here for page 2.
-              </Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link component={RouterLink} to="/">
-                Click here to go back to root page.
-              </Link>
-            </div>
-          }
-        />
+        <Route index element={<UiGallery />} />
       </Route>
     </Routes>
   );
