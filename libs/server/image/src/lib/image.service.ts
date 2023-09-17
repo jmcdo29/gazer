@@ -14,14 +14,25 @@ export class ImageService {
 
   constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
 
-  async getImages(options: ImagesQuery): Promise<Image[]> {
+  async getImages(
+    options: ImagesQuery
+  ): Promise<{ images: Image[]; count: string | number | bigint }> {
     const page = options.page;
-    return this.db
+    const images = await this.db
       .selectFrom('image')
       .selectAll()
       .where('index', '>=', (page - 1) * 20)
+      .orderBy('index', 'asc')
       .limit(20)
       .execute();
+    const count = await this.db
+      .selectFrom('image')
+      .select((eb) => eb.fn.count('id').as('total'))
+      .executeTakeFirstOrThrow();
+    return {
+      images,
+      count: count.total,
+    };
   }
 
   async addImage(newImage: CreateImage, file: File): Promise<Image> {
