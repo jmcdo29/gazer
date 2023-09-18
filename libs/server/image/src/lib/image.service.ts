@@ -44,9 +44,39 @@ export class ImageService {
   }
 
   async addImage(newImage: CreateImage, file: File): Promise<Image> {
+    let ext = '';
+    switch (file.mimetype) {
+      case 'image/jpeg':
+        ext = 'jpg';
+        break;
+      case 'image/png':
+        ext = 'png';
+        break;
+      case 'image/gif':
+        ext = 'gif';
+        break;
+      case 'image/avif':
+        ext = 'avif';
+        break;
+      case 'image/vnd.microsoft.icon':
+        ext = 'ico';
+        break;
+      case 'image/svg+xml':
+        ext = 'svg';
+        break;
+      case 'image/tiff':
+        ext = 'tiff';
+        break;
+      case 'image/bmp':
+        ext = 'bmp';
+        break;
+      default:
+        ext = 'txt';
+        break;
+    }
     const url = `/${randomBytes(4).toString('hex')}-${randomBytes(4).toString(
       'hex'
-    )}-${file.originalname}`;
+    )}-${file.originalname}.${ext}`;
     if (!file.buffer) {
       throw new InternalServerErrorException(
         'How did you upload a file without a buffer?'

@@ -1,14 +1,14 @@
-import { UserContext } from '@gazer/ui/store';
+import { User, UserContext } from '@gazer/ui/store';
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextInput from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export interface UiLoginProps {
-  setUser: (user: Record<string, string>) => void;
+  setUser: (user: User) => void;
 }
 
 const baseUrl = import.meta.env.VITE_SERVER_URL;
@@ -57,9 +57,12 @@ export function UiLogin(props: UiLoginProps) {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showError, setShowError] = useState(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  if (user.id) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (user.id) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
   const login = async () => {
     const res = await fetch(`${baseUrl}/auth/login`, {
       body: JSON.stringify(form),
@@ -103,7 +106,7 @@ export function UiLogin(props: UiLoginProps) {
       <LoginComponent>
         <TextInput
           type="email"
-          label="email"
+          label="Email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
@@ -111,7 +114,7 @@ export function UiLogin(props: UiLoginProps) {
       <LoginComponent>
         <TextInput
           type="password"
-          label="password"
+          label="Password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />

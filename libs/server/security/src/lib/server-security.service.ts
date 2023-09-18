@@ -18,7 +18,7 @@ export class ServerSecurityService {
       .select(['password', 'id'])
       .where('email', '=', login.email)
       .executeTakeFirst();
-    if (!user || (await verify(user.password, login.password))) {
+    if (!user?.id || !(await verify(user.password, login.password))) {
       throw new UnauthorizedException('Invalid email or password');
     }
 

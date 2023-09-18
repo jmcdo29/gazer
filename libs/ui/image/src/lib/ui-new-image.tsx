@@ -27,7 +27,7 @@ export const UiNewImage = () => {
     const res = await fetch(`${baseUrl}/image`, {
       method: 'POST',
       headers: {
-        authorization: `Bearer ${user.token}`,
+        authorization: `Bearer ${user.sessionToken}`,
       },
       body: formData,
     });
@@ -38,8 +38,8 @@ export const UiNewImage = () => {
   };
   return (
     <Box>
-      <Grid container justifyContent={'center'} alignItems="center">
-        <Grid>
+      <Grid container justifyContent={'center'} alignItems="center" spacing={2}>
+        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
           <TextField
             type="string"
             value={form.name}
@@ -47,7 +47,7 @@ export const UiNewImage = () => {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
         </Grid>
-        <Grid xs={12}>
+        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
           <TextField
             type="file"
             inputProps={{ accept: 'image/*' }}
@@ -59,7 +59,7 @@ export const UiNewImage = () => {
             }}
           />
         </Grid>
-        <Grid>
+        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
           <TextField
             type="string"
             value={form.description}
@@ -67,7 +67,7 @@ export const UiNewImage = () => {
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
         </Grid>
-        <Grid>
+        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
           <Button variant="contained" onClick={save}>
             Submit
           </Button>

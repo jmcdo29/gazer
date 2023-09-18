@@ -53,9 +53,13 @@ export function UiImage() {
     }
     await fetch(`${baseUrl}/image/${image?.id}`, {
       method: 'PATCH',
-      body: JSON.stringify(image),
+      body: JSON.stringify({
+        name: tempImage?.name,
+        description: tempImage?.description,
+      }),
       headers: {
-        authorization: `Bearer ${user.token}`,
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${user.sessionToken}`,
       },
     });
     setImage(tempImage);
@@ -65,7 +69,7 @@ export function UiImage() {
     await fetch(`${baseUrl}/image/${image?.id}`, {
       method: 'DELETE',
       headers: {
-        authorization: `Bearer ${user.token}`,
+        authorization: `Bearer ${user.sessionToken}`,
       },
     });
   };
