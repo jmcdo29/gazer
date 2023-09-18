@@ -35,6 +35,14 @@ export class ImageService {
     };
   }
 
+  async getImage(id: string): Promise<Image> {
+    return this.db
+      .selectFrom('image')
+      .selectAll()
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+  }
+
   async addImage(newImage: CreateImage, file: File): Promise<Image> {
     const url = `/${randomBytes(4).toString('hex')}-${randomBytes(4).toString(
       'hex'

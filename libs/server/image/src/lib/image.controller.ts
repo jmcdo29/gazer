@@ -32,6 +32,11 @@ export class ImageController {
     return this.service.getImages(query.data);
   }
 
+  @Get(':id')
+  async getImage(@Param() param: ImageIdParamDto) {
+    return this.service.getImage(param.data.id);
+  }
+
   @UseGuards(LoggedInGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
