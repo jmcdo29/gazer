@@ -1,14 +1,18 @@
+import { UserContext } from '@gazer/ui/store';
 import AccountBox from '@mui/icons-material/AccountBox';
+import PlusIcon from '@mui/icons-material/Add';
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Unstable_Grid2';
+import { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface UiNavProps {}
 
 export function UiNav(_props: UiNavProps) {
+  const user = useContext(UserContext);
   const theme = useTheme();
   return (
     <Box
@@ -19,7 +23,12 @@ export function UiNav(_props: UiNavProps) {
     >
       <Grid container>
         <Grid xs marginLeft={'0.5em'}>
-          <Link component={RouterLink} to="/" display="inline-flex">
+          <Link
+            component={RouterLink}
+            to="/"
+            display="inline-flex"
+            underline="none"
+          >
             <Typography color={theme.palette.secondary.dark} fontSize={'2em'}>
               ClippyClips
             </Typography>
@@ -40,7 +49,15 @@ export function UiNav(_props: UiNavProps) {
           marginTop={'0.5em'}
           marginRight={'0.5em'}
         >
-          <Link component={RouterLink} to="/">
+          {!user.id ? (
+            <Link component={RouterLink} to="/new" marginRight={'1em'}>
+              <PlusIcon fontSize="large" color={'secondary'} />
+            </Link>
+          ) : (
+            ''
+          )}
+
+          <Link component={RouterLink} to="/login">
             <AccountBox fontSize="large" color={'secondary'} />
           </Link>
         </Grid>

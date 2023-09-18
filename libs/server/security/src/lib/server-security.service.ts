@@ -43,7 +43,7 @@ export class ServerSecurityService {
         },
       ])
       .execute();
-    return { sessionToken, refreshToken };
+    return { sessionToken, refreshToken, id: user.id };
   }
 
   async findUserFromSessionToken(
