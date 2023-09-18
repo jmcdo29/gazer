@@ -27,8 +27,11 @@
       "@gazer/shared/types": ["libs/shared/types/src/index.ts"],
       "@gazer/ui/footer": ["libs/ui/footer/src/index.ts"],
       "@gazer/ui/gallery": ["libs/ui/gallery/src/index.ts"],
+      "@gazer/ui/image": ["libs/ui/image/src/index.ts"],
+      "@gazer/ui/login": ["libs/ui/login/src/index.ts"],
       "@gazer/ui/nav": ["libs/ui/nav/src/index.ts"],
-      "@gazer/ui/router": ["libs/ui/router/src/index.ts"]
+      "@gazer/ui/router": ["libs/ui/router/src/index.ts"],
+      "@gazer/ui/store": ["libs/ui/store/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
