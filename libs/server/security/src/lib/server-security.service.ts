@@ -18,7 +18,7 @@ export class ServerSecurityService {
       .select(['password', 'id'])
       .where('email', '=', login.email)
       .executeTakeFirst();
-    if (!user || (await verify(user.password, login.password))) {
+    if (!user?.id || !(await verify(user.password, login.password))) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
@@ -33,7 +33,7 @@ export class ServerSecurityService {
           type: 'session',
           value: sessionToken,
           userId: user.id,
-          expiresAt: sql`NOW() + '1 DAY'`,
+          expiresAt: sql`NOW() + '1 MIN'`,
         },
         {
           type: 'refresh',
@@ -43,7 +43,7 @@ export class ServerSecurityService {
         },
       ])
       .execute();
-    return { sessionToken, refreshToken };
+    return { sessionToken, refreshToken, id: user.id };
   }
 
   async findUserFromSessionToken(

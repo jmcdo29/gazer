@@ -1,8 +1,9 @@
 import { ImageModule } from '@gazer/server/image';
-import { Logger, Module } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe } from '@nest-lab/typeschema';
-import { OgmaModule } from '@ogma/nestjs-module';
+import { Logger, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { OgmaInterceptor, OgmaModule } from '@ogma/nestjs-module';
+import { FastifyParser } from '@ogma/platform-fastify';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,17 +12,22 @@ import { AppService } from './app.service';
   imports: [
     OgmaModule.forRoot({
       application: 'Gazer Server',
-      logLevel: 'SILLY',
+      logLevel: 'VERBOSE',
     }),
     ImageModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    FastifyParser,
     Logger,
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: OgmaInterceptor,
     },
   ],
 })
