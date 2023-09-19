@@ -17,11 +17,11 @@ export class ImageService {
   async getImages(
     options: ImagesQuery
   ): Promise<{ images: Image[]; count: string | number | bigint }> {
-    const page = options.page;
+    const { page, latestIndex } = options;
     const images = await this.db
       .selectFrom('image')
       .selectAll()
-      .where('index', '>=', (page - 1) * 20)
+      .where('index', '>=', latestIndex ?? (page - 1) * 20)
       .orderBy('index', 'asc')
       .limit(20)
       .execute();

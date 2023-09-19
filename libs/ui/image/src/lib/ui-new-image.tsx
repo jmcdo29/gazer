@@ -1,9 +1,8 @@
 import { UserContext } from '@gazer/ui/store';
+import { postData } from '@gazer/ui/utils';
 import { Box, Button, TextField, Unstable_Grid2 as Grid } from '@mui/material';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-const baseUrl = import.meta.env.VITE_SERVER_URL;
 
 export const UiNewImage = () => {
   const user = useContext(UserContext);
@@ -24,17 +23,8 @@ export const UiNewImage = () => {
     if (form.file) {
       formData.set('file', form.file, form.name);
     }
-    const res = await fetch(`${baseUrl}/image`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${user.sessionToken}`,
-      },
-      body: formData,
-    });
-    if (res.ok) {
-      const data = await res.json();
-      navigate(`/${data.id}`);
-    }
+    const data = await postData('image', formData, user);
+    navigate(`/${data.id}`);
   };
   return (
     <Box>

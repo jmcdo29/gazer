@@ -1,10 +1,9 @@
 import { TypeschemaDto } from '@nest-lab/typeschema';
-import { object, Output, string, StringSchema, transform } from 'valibot';
+import { object, optional, Output, string, transform } from 'valibot';
 
 const ImagesQueryDtoSchema = object({
-  page: transform<StringSchema, number>(string(), (val) =>
-    Number.parseInt(val)
-  ),
+  page: transform(string(), (val) => Number.parseInt(val)),
+  latestIndex: optional(transform(string(), (val) => Number.parseInt(val))),
 });
 
 export class ImagesQueryDto extends TypeschemaDto(ImagesQueryDtoSchema) {}

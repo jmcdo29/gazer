@@ -90,7 +90,7 @@ export const GalleryNav = ({ page, setPage, totalPages }: GalleryNavProps) => {
             &gt;
           </NavButton>
           <NavButton
-            onClick={() => changePage(100)}
+            onClick={() => changePage(totalPages)}
             disabled={page >= totalPages}
           >
             &gt;&gt;

@@ -1,4 +1,5 @@
 import { User, UserContext } from '@gazer/ui/store';
+import { postData } from '@gazer/ui/utils';
 import { Typography, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -10,8 +11,6 @@ import { useNavigate } from 'react-router-dom';
 export interface UiLoginProps {
   setUser: (user: User) => void;
 }
-
-const baseUrl = import.meta.env.VITE_SERVER_URL;
 
 const LoginComponent = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -64,15 +63,21 @@ export function UiLogin(props: UiLoginProps) {
   }, [user, navigate]);
 
   const login = async () => {
-    const res = await fetch(`${baseUrl}/auth/login`, {
-      body: JSON.stringify(form),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await res.json();
-    if (!res.ok) {
+    try {
+      const data = await postData('auth/login', form);
+      props.setUser(data as unknown as User);
+      navigate('/');
+    } catch (err) {
+      if (
+        typeof err !== 'object' ||
+        err === undefined ||
+        err === null ||
+        !('message' in err) ||
+        typeof err.message !== 'string'
+      ) {
+        throw err;
+      }
+      const data = JSON.parse(err.message);
       if (typeof data === 'object' && 'message' in data) {
         if (Array.isArray(data.message)) {
           setErrorMessages(
@@ -98,8 +103,6 @@ export function UiLogin(props: UiLoginProps) {
         return;
       }
     }
-    props.setUser(data);
-    navigate('/');
   };
   return (
     <Grid container justifyContent={'space-around'}>

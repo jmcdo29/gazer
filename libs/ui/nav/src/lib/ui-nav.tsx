@@ -24,6 +24,9 @@ export function UiNav(props: UiNavProps) {
       id: '',
       sessionToken: '',
       refreshToken: '',
+      setUser: () => {
+        /* no op */
+      },
     });
   };
   return (

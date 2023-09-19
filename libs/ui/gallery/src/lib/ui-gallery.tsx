@@ -1,3 +1,4 @@
+import { BASE_URL } from '@gazer/ui/utils';
 import { useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
@@ -15,8 +16,6 @@ interface Image {
   name: string;
   index: number;
 }
-
-const baseUrl = import.meta.env.VITE_SERVER_URL;
 
 /* eslint-disable-next-line */
 export interface UiGalleryProps {}
@@ -41,12 +40,13 @@ export function UiGallery(_props: UiGalleryProps) {
       }
       if (val !== page) {
         setPage(val);
-        if (page !== 1) {
-          setSearchParams({
-            page: val.toString(),
-            latestIndex: latestIndex?.toString() ?? '',
-          });
+        const searchParamsObj: { page: string; latestIndex?: string } = {
+          page: val.toString(),
+        };
+        if (val !== 1) {
+          searchParamsObj.latestIndex = latestIndex?.toString() ?? '';
         }
+        setSearchParams(searchParamsObj);
       }
     },
     [setSearchParams, setPage, page, maxPage, latestIndex]
@@ -54,9 +54,9 @@ export function UiGallery(_props: UiGalleryProps) {
   useEffect(() => {
     let ignore = false;
     const getImages = async () => {
-      let url = `${baseUrl}/image?page=${page}`;
+      let url = `${BASE_URL}/image?page=${page}`;
       if (latestIndex && page !== 1) {
-        url += `&latestId=${latestIndex}`;
+        url += `&latestIndex=${latestIndex}`;
       }
       const res = await fetch(url);
       const data = await res.json();

@@ -7,15 +7,15 @@ import { useEffect, useState } from 'react';
 import { theme } from './theme';
 
 export function App() {
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<Omit<User, 'setUser'>>({
     id: '',
     refreshToken: '',
     sessionToken: '',
   });
-  const saveUser = (user: User): void => {
-    window.sessionStorage.setItem('sessionToken', user.sessionToken);
-    window.sessionStorage.setItem('refreshToken', user.refreshToken);
-    window.sessionStorage.setItem('userId', user.id);
+  const saveUser = (user: Omit<User, 'setUser'>): void => {
+    sessionStorage.setItem('sessionToken', user.sessionToken);
+    sessionStorage.setItem('refreshToken', user.refreshToken);
+    sessionStorage.setItem('userId', user.id);
     setUser({ ...user });
   };
   useEffect(() => {
@@ -35,7 +35,7 @@ export function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={{ ...user, setUser: saveUser }}>
           <UiRouter setUser={saveUser} />
         </UserContext.Provider>
       </CssBaseline>

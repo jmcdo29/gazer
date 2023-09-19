@@ -31,7 +31,8 @@
       "@gazer/ui/login": ["libs/ui/login/src/index.ts"],
       "@gazer/ui/nav": ["libs/ui/nav/src/index.ts"],
       "@gazer/ui/router": ["libs/ui/router/src/index.ts"],
-      "@gazer/ui/store": ["libs/ui/store/src/index.ts"]
+      "@gazer/ui/store": ["libs/ui/store/src/index.ts"],
+      "@gazer/ui/utils": ["libs/ui/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
