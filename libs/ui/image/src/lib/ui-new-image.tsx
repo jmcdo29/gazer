@@ -42,7 +42,6 @@ export const UiNewImage = () => {
             type="file"
             inputProps={{ accept: 'image/*' }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              console.log(e.target);
               const files = e.target.files;
               const file = files && files.length ? files[0] : null;
               setForm({ ...form, file });

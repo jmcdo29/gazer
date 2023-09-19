@@ -41,7 +41,6 @@ export function UiImage() {
     };
   }, [setImage, imageId]);
   const save = async (val: boolean) => {
-    console.log({ val, editing });
     if (!val && editing) {
       setEditing(false);
       setTempImage(image);
