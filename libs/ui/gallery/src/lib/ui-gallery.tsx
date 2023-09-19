@@ -28,7 +28,6 @@ export function UiGallery(_props: UiGalleryProps) {
   );
   const [images, setImages] = useState<Image[]>([]);
   const [maxPage, setMaxPage] = useState(1);
-  const [latestIndex, setLatestIndex] = useState<string | undefined>(undefined);
   const navigate = useNavigate();
   const setSearch = useCallback(
     (val: number): void => {
@@ -43,21 +42,21 @@ export function UiGallery(_props: UiGalleryProps) {
         const searchParamsObj: { page: string; latestIndex?: string } = {
           page: val.toString(),
         };
-        if (val !== 1) {
-          searchParamsObj.latestIndex = latestIndex?.toString() ?? '';
-        }
+        // if (val !== 1) {
+        //   searchParamsObj.latestIndex = images[images.length - 1].id.toString();
+        // }
         setSearchParams(searchParamsObj);
       }
     },
-    [setSearchParams, setPage, page, maxPage, latestIndex]
+    [setSearchParams, setPage, page, maxPage]
   );
   useEffect(() => {
     let ignore = false;
     const getImages = async () => {
-      let url = `${BASE_URL}/image?page=${page}`;
-      if (latestIndex && page !== 1) {
-        url += `&latestIndex=${latestIndex}`;
-      }
+      const url = `${BASE_URL}/image?page=${page}`;
+      // if (page !== 1) {
+      //   url += `&latestIndex=${images[images.length - 1].index}`;
+      // }
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
@@ -70,7 +69,6 @@ export function UiGallery(_props: UiGalleryProps) {
         if (maxPages !== maxPage) {
           setMaxPage(maxPages);
         }
-        setLatestIndex(data.images[data.images.length - 1].index);
       }
       if (data.images.length === 0) {
         setSearch(maxPage);
@@ -81,7 +79,7 @@ export function UiGallery(_props: UiGalleryProps) {
     return () => {
       ignore = true;
     };
-  }, [page, setSearch, maxPage, setMaxPage, latestIndex, setLatestIndex]);
+  }, [page, setSearch, maxPage]);
   return (
     <Box paddingX={'1em'}>
       <ImageList cols={isNotSmallScreen ? 4 : 2} gap={16}>
