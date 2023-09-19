@@ -1,11 +1,11 @@
 import {
-  string,
   enumType,
-  object,
   fallback,
   merge,
-  transform,
   number,
+  object,
+  string,
+  transform,
 } from 'valibot';
 
 const hourInSeconds = 60 * 60;
