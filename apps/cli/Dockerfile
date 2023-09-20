@@ -20,18 +20,18 @@ COPY package.json \
 ENV CYPRESS_INSTALL_BINARY=0
 RUN pnpm i
 
-FROM gazer-common AS migrations-build
+FROM gazer-common AS cli-build
 COPY apps/cli ./apps/cli
 COPY libs/server ./libs/server
 COPY libs/db ./libs/db
 COPY libs/shared ./libs/shared/
 RUN pnpm nx run cli:build:production
 
-FROM gazer-node AS migrations-prod
+FROM gazer-node AS cli-prod
 LABEL description="The image that runs migrations for the ClippyClips Database. This should be ran as one-off commands on demand"
 USER node
 WORKDIR /src
-COPY --from=migrations-build --chown=node:node /src/dist ./dist
+COPY --from=cli-build --chown=node:node /src/dist ./dist
 RUN cp ./dist/apps/cli/package.json ./package.json
 ENV NODE_ENV=production
 RUN pnpm i
