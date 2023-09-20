@@ -35,15 +35,19 @@ export default async function runExecutor(
         `${dockerNamespace}/${tagPrefix.replace('latest', gCommit)}`,
       ];
       logger.verbose(`Using docker tag ${tags}`);
-
       const target = options.target ?? `${project}-prod`;
       logger.verbose(`Using dockerfile target ${target}`);
-
       const builder = options.builder ?? 'container';
       logger.verbose(`Using docker builder ${builder}`);
-
       const publish = options.publish ?? false;
-      const commandString = `docker buildx build ${tags
+      const path =
+        options.path ??
+        `${
+          context.projectsConfigurations!.projects[context.projectName!].root
+        }/Dockerfile`;
+      const commandString = `docker buildx build ${
+        path ? '-f ' + path + ' ' : ''
+      }${tags
         .map((t) => `-t ${t}`)
         .join(
           ' '
