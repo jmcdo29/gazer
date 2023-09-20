@@ -33,7 +33,7 @@ export class ServerSecurityService {
           type: 'session',
           value: sessionToken,
           userId: user.id,
-          expiresAt: sql`NOW() + '1 MIN'`,
+          expiresAt: sql`NOW() + '1 DAY'`,
         },
         {
           type: 'refresh',
