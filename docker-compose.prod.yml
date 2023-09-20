@@ -7,7 +7,7 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - './images:/src/public'
+      - './images:/src'
     labels:
       - 'com.centurylinklabs.watchtower.enable=true'
   server:
