@@ -42,3 +42,4 @@ images/
 .env
 apps/ui/public
 docker/
+!libs/plugins/docker/
