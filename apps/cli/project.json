@@ -52,6 +52,17 @@
       "options": {
         "lintFilePatterns": ["apps/cli/**/*.ts"]
       }
+    },
+    "package": {
+      "executor": "@gazer/docker/plugin:build",
+      "outputs": ["{workspaceRoot}/docker/cache/postgres"],
+      "options": {},
+      "inputs": ["{projectRoot}/Dockerfile"],
+      "configurations": {
+        "ci": {
+          "publish": true
+        }
+      }
     }
   },
   "tags": []

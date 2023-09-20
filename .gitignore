@@ -41,3 +41,4 @@ Thumbs.db
 images/
 .env
 apps/ui/public
+docker/
