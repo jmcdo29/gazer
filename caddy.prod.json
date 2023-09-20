@@ -1,0 +1,96 @@
+{
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [":443"],
+          "routes": [
+            {
+              "match": [
+                {
+                  "host": ["api.clippyclips.net"]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "transport": {
+                    "protocol": "http"
+                  },
+                  "upstreams": [{ "dial": "localhost:3333" }],
+                  "rewrite": {
+                    "uri": "/api{http.request.uri}"
+                  }
+                }
+              ],
+              "terminal": true
+            },
+            {
+              "match": [
+                {
+                  "host": ["clippyclips.net"],
+                  "protocol": "http"
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "transport": { "protocol": "http" },
+                  "upstreams": [{ "dial": "localhost:443" }]
+                }
+              ]
+            },
+            {
+              "match": [
+                {
+                  "host": ["clippyclips.net"]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "transport": { "protocol": "http" },
+                  "upstreams": [{ "dial": "localhost:8080" }]
+                }
+              ],
+              "terminal": true
+            }
+          ]
+        },
+        "srv1": {
+          "listen": [":80"],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "static_response",
+                  "headers": {
+                    "Location": ["301"]
+                  },
+                  "status_code": 302
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "layer4": {
+      "servers": {
+        "postgres": {
+          "listen": [":5432"],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "proxy",
+                  "upstreams": [{ "dial": ["localhost:5433"] }]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
