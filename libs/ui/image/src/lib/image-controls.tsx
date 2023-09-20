@@ -31,7 +31,7 @@ export const ImageControls = ({
   return (
     <Grid container justifyContent={'center'}>
       <Grid>
-        <ControlButton action={() => navigate(-1)}>Go Back</ControlButton>
+        <ControlButton action={() => navigate('/')}>Go Back</ControlButton>
       </Grid>
       <Grid xs={1} sm={5} md={9}>
         <Box />

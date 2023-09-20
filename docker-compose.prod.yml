@@ -2,12 +2,12 @@ version: '3'
 name: gazer
 
 services:
-  site:
-    image: jmcdo29/gazer-site
+  ui:
+    image: jmcdo29/gazer-ui
     ports:
       - '8080:80'
     volumes:
-      - './images:/src'
+      - './images:/src/dist/apps/ui/images'
     labels:
       - 'com.centurylinklabs.watchtower.enable=true'
   server:
@@ -25,8 +25,8 @@ services:
       - postgres
     labels:
       - 'com.centurylinklabs.watchtower.enable=true'
-  migrations:
-    image: jmcdo29/gazer-migrations
+  cli:
+    image: jmcdo29/gazer-cli
     env_file: .env
     environment:
       DATABASE_HOST: postgres
