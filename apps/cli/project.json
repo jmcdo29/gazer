@@ -16,7 +16,8 @@
         "main": "apps/cli/src/main.ts",
         "tsConfig": "apps/cli/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/cli/webpack.config.js"
+        "webpackConfig": "apps/cli/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
