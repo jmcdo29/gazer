@@ -15,7 +15,9 @@ export class ServerSecurityController {
 
   @UseGuards(RefreshGuard)
   @Post('refresh')
-  refreshToken(@Req() { user }: { user: { id: string } }) {
-    return this.service.createNewSessionToken(user.id);
+  refreshToken(
+    @Req() { user }: { user: { id: string; refreshToken: string } }
+  ) {
+    return this.service.createNewSessionToken(user);
   }
 }
