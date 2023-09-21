@@ -72,9 +72,10 @@ export class ServerSecurityService {
       .executeTakeFirst();
   }
 
-  async createNewSessionToken(
-    userId: string
-  ): Promise<{ sessionToken: string }> {
+  async createNewSessionToken(user: {
+    id: string;
+    refreshToken: string;
+  }): Promise<{ sessionToken: string; refreshToken: string }> {
     const sessionToken = this.createToken();
     await this.db
       .insertInto('token')
@@ -82,10 +83,30 @@ export class ServerSecurityService {
       .values({
         type: 'session',
         value: sessionToken,
-        userId,
+        userId: user.id,
       })
       .execute();
-    return { sessionToken };
+    const willExpireSoon = await this.db
+      .selectFrom('token')
+      .select(() => [
+        sql<boolean>`expires_at < NOW() + '2 DAY`.as('expiresSoon'),
+      ])
+      .where('type', '=', 'refresh')
+      .where('value', '=', user.refreshToken)
+      .executeTakeFirst();
+    if (willExpireSoon?.expiresSoon) {
+      user.refreshToken = this.createToken('refresh');
+      await this.db
+        .insertInto('token')
+        .columns(['type', 'value', 'userId'])
+        .values({
+          type: 'refresh',
+          value: user.refreshToken,
+          userId: user.id,
+        })
+        .execute();
+    }
+    return { sessionToken, refreshToken: user.refreshToken };
   }
 
   private createToken(type: 'session' | 'refresh' = 'session'): string {

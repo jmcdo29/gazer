@@ -15,12 +15,13 @@ const refreshUser = async (user: User) => {
   }
   user.setUser({
     id: user.id,
-    refreshToken: user.refreshToken,
+    refreshToken: data.refreshToken,
     sessionToken: data.sessionToken,
   });
   return {
     ...user,
     sessionToken: data.sessionToken,
+    refreshToken: data.refreshToken,
   };
 };
 
