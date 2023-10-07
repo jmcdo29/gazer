@@ -1,12 +1,13 @@
 import {
+  boolean,
+  nullable,
   number,
   object,
   optional,
   Output,
   string,
-  regex,
-  length,
 } from 'valibot';
+
 import { ulid } from '../validators';
 
 export const ImageSchema = object({
@@ -15,6 +16,8 @@ export const ImageSchema = object({
   description: optional(string()),
   name: string(),
   index: number(),
+  stickyIndex: nullable(number()),
+  sticky: boolean(),
 });
 
 export type Image = Output<typeof ImageSchema>;

@@ -1,10 +1,13 @@
-import { BASE_URL } from '@gazer/ui/utils';
-import { useMediaQuery } from '@mui/material';
+import { UserContext } from '@gazer/ui/store';
+import { BASE_URL, postData } from '@gazer/ui/utils';
+import PinFirst from '@mui/icons-material/KeyboardDoubleArrowUp';
+import PushPin from '@mui/icons-material/PushPin';
+import { IconButton, useMediaQuery } from '@mui/material';
 import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { GalleryNav } from './gallery-nav';
@@ -15,12 +18,15 @@ interface Image {
   description?: string;
   name: string;
   index: number;
+  sticky: boolean;
+  stickyIndex: number | null;
 }
 
 /* eslint-disable-next-line */
 export interface UiGalleryProps {}
 
 export function UiGallery(_props: UiGalleryProps) {
+  const user = useContext(UserContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const isNotSmallScreen = useMediaQuery('(min-width:600px)');
   const [page, setPage] = useState<number>(
@@ -80,21 +86,57 @@ export function UiGallery(_props: UiGalleryProps) {
       ignore = true;
     };
   }, [page, setSearch, maxPage]);
+  const pin = async (image: Image, first = false): Promise<void> => {
+    const body: { sticky: boolean; stickyIndex?: number } = {
+      sticky: !image.sticky,
+    };
+    if (first) {
+      body.stickyIndex = 1;
+    }
+    await postData(`image/${image.id}`, body, user, 'PATCH');
+  };
   return (
     <Box paddingX={'1em'}>
       <ImageList cols={isNotSmallScreen ? 4 : 2} gap={16}>
         {images.map((image) => (
-          <ImageListItem
-            key={image.id}
-            onClick={() => {
-              navigate(image.id);
-            }}
-            sx={{ cursor: 'pointer' }}
-          >
-            <img src={image.url} alt={image.description} loading="lazy" />
+          <ImageListItem key={image.id} sx={{ cursor: 'pointer' }}>
+            <img
+              src={image.url}
+              alt={image.description}
+              loading="lazy"
+              onClick={() => {
+                navigate(image.id);
+              }}
+            />
             <ImageListItemBar
               title={image.name}
               subtitle={image.description}
+              sx={{ paddingX: '0.5em', cursor: 'default' }}
+              actionIcon={
+                user.id ? (
+                  <>
+                    <IconButton
+                      color={image.sticky ? 'secondary' : 'primary'}
+                      onClick={() => pin(image)}
+                    >
+                      <PushPin />
+                    </IconButton>
+                    <IconButton
+                      color={
+                        image.sticky && image.stickyIndex === 1
+                          ? 'secondary'
+                          : 'primary'
+                      }
+                      onClick={() => pin(image, true)}
+                      disabled={image.stickyIndex === 1}
+                    >
+                      <PinFirst />
+                    </IconButton>
+                  </>
+                ) : (
+                  <div />
+                )
+              }
             ></ImageListItemBar>
           </ImageListItem>
         ))}
