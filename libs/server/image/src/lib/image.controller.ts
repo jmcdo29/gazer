@@ -26,9 +26,10 @@ export class ImageController {
   constructor(private readonly service: ImageService) {}
 
   @Get()
-  async getImages(
-    @Query() query: ImagesQueryDto
-  ): Promise<{ images: Image[]; count: string | number | bigint }> {
+  async getImages(@Query() query: ImagesQueryDto): Promise<{
+    images: Image[];
+    count: string | number | bigint;
+  }> {
     return this.service.getImages(query.data);
   }
 
@@ -43,7 +44,7 @@ export class ImageController {
   async addImage(
     @Body() body: CreateImageDto,
     @UploadedFile() file: File
-  ): Promise<Image> {
+  ): Promise<Omit<Image, 'sticky' | 'stickyIndex'>> {
     return this.service.addImage(body.data, file);
   }
 
