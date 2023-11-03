@@ -1,11 +1,9 @@
-import { date, enumType, object, Output, string, union } from 'valibot';
-
-import { ulid } from '../validators';
+import { date, object, Output, picklist, string, ulid, union } from 'valibot';
 
 export const TokenSchema = object({
-  type: enumType(['session', 'refresh']),
+  type: picklist(['session', 'refresh']),
   value: string(),
-  userId: ulid(),
+  userId: string([ulid()]),
   expiresAt: union([date(), string()]),
 });
 

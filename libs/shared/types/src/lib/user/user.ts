@@ -1,9 +1,7 @@
-import { email, object, Output, string } from 'valibot';
-
-import { ulid } from '../validators';
+import { email, object, Output, string, ulid } from 'valibot';
 
 export const UserSchema = object({
-  id: ulid(),
+  id: string([ulid()]),
   email: string([email()]),
   password: string(),
 });

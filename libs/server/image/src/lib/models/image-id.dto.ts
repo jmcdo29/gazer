@@ -1,9 +1,8 @@
-import { ulid } from '@gazer/shared/types';
 import { TypeschemaDto } from '@nest-lab/typeschema';
-import { object } from 'valibot';
+import { object, string, ulid } from 'valibot';
 
 const ImageIdParamSchema = object({
-  id: ulid(),
+  id: string([ulid()]),
 });
 
 export class ImageIdParamDto extends TypeschemaDto(ImageIdParamSchema) {}

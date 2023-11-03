@@ -6,12 +6,11 @@ import {
   optional,
   Output,
   string,
+  ulid,
 } from 'valibot';
 
-import { ulid } from '../validators';
-
 export const ImageSchema = object({
-  id: ulid(),
+  id: string([ulid()]),
   url: string(),
   description: optional(string()),
   name: string(),
