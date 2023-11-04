@@ -1,5 +1,10 @@
 import { Database, InjectKysely } from '@gazer/server/kysely';
-import { CreateImage, Image, UpdateImage } from '@gazer/shared/types';
+import {
+  CreateImage,
+  GetImages,
+  Image,
+  UpdateImage,
+} from '@gazer/shared/types';
 import { File } from '@nest-lab/fastify-multer';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { randomBytes } from 'crypto';
@@ -16,31 +21,70 @@ export class ImageService {
   constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
 
   async getImages(options: ImagesQuery): Promise<{
-    images: Image[];
+    images: GetImages;
     count: string | number | bigint;
   }> {
-    const { page, latestIndex } = options;
+    const { page, latestIndex, parentId } = options;
+    const folders = await this.db
+      .selectFrom('folder')
+      .selectAll()
+      .where('parentId', parentId ? '=' : 'is', parentId ?? null)
+      .orderBy('name asc')
+      .limit(20)
+      .offset((page - 1) * 20)
+      .execute();
+    const folderCount = await this.db
+      .selectFrom('folder')
+      .select((eb) => eb.fn.count<string>('id').as('total'))
+      .where('parentId', parentId ? '=' : 'is', parentId ?? null)
+      .executeTakeFirstOrThrow();
     const images = await this.db
       .selectFrom('image')
       .selectAll()
-      .where('index', '>=', latestIndex ?? (page - 1) * 20)
+      .where(
+        'index',
+        '>=',
+        latestIndex ??
+          Math.max((page - 1) * 20 - Number.parseInt(folderCount.total), 0)
+      )
+      .where('folderId', parentId ? '=' : 'is', parentId ?? null)
       .orderBy(['sticky desc', 'stickyIndex asc', 'index asc'])
-      .limit(20)
+      .limit(Math.max(20 - folders.length, 0))
       .execute();
-    const count = await this.db
+    const imageCount = await this.db
       .selectFrom('image')
-      .select((eb) => eb.fn.count('id').as('total'))
+      .select((eb) => eb.fn.count<string>('id').as('total'))
+      .where('folderId', parentId ? '=' : 'is', parentId ?? null)
       .executeTakeFirstOrThrow();
     return {
-      images,
-      count: count.total,
+      images: [
+        ...folders.map((f) => ({ ...f, type: 'folder' as const })),
+        ...images.map((i) => ({ ...i, type: 'image' as const })),
+      ],
+      count:
+        Number.parseInt(folderCount.total, 0) +
+        Number.parseInt(imageCount.total, 0),
     };
   }
 
-  async getImage(id: string): Promise<Image> {
+  async getImage(id: string): Promise<{
+    id: string;
+    name: string;
+    folderName: string | null;
+    description: string | undefined;
+    url: string;
+  }> {
     return this.db
-      .selectFrom('image')
-      .selectAll()
+      .selectFrom('image as i')
+      .leftJoin('folder as f', 'f.id', 'i.folderId')
+      .select([
+        'i.id',
+        'i.name',
+        'i.description',
+        'i.url',
+        'i.folderId',
+        'f.name as folderName',
+      ])
       .where('id', '=', id)
       .executeTakeFirstOrThrow();
   }

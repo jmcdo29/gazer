@@ -1,5 +1,5 @@
 {
   "eslint.validate": ["json"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["Clippy"]
+  "cSpell.words": ["Clippy", "picklist"]
 }

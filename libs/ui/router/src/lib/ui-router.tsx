@@ -1,3 +1,4 @@
+import { UiCreateFolder, UiUpdateFolder } from '@gazer/ui/folder';
 import { UiFooter } from '@gazer/ui/footer';
 import { UiGallery } from '@gazer/ui/gallery';
 import { UiImage, UiNewImage } from '@gazer/ui/image';
@@ -39,12 +40,11 @@ export function UiRouter(props: UiRouterProps) {
     <Routes>
       <Route path="/" element={<Root setUser={props.setUser} />}>
         <Route index element={<UiGallery />} />
-        <Route
-          path="login"
-          element={<UiLogin setUser={props.setUser} />}
-        ></Route>
-        <Route path="new" element={<UiNewImage />}></Route>
-        <Route path=":id" element={<UiImage />}></Route>
+        <Route path="login" element={<UiLogin setUser={props.setUser} />} />
+        <Route path="new/image" element={<UiNewImage />} />
+        <Route path="edit/folder/:id" element={<UiUpdateFolder />} />
+        <Route path="new/folder" element={<UiCreateFolder />} />
+        <Route path=":id" element={<UiImage />} />
       </Route>
     </Routes>
   );

@@ -1,10 +1,12 @@
 import Heart from '@mui/icons-material/Favorite';
 import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Box,
+  Divider,
+  Link,
+  Typography,
+  Unstable_Grid2 as Grid,
+} from '@mui/material';
 
 export const UiFooter = (): JSX.Element => {
   const theme = useTheme();

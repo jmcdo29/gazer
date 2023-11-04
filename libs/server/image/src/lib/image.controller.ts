@@ -1,5 +1,5 @@
 import { LoggedInGuard } from '@gazer/server/security';
-import { Image } from '@gazer/shared/types';
+import { GetImages, Image } from '@gazer/shared/types';
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import {
   Body,
@@ -27,7 +27,7 @@ export class ImageController {
 
   @Get()
   async getImages(@Query() query: ImagesQueryDto): Promise<{
-    images: Image[];
+    images: GetImages;
     count: string | number | bigint;
   }> {
     return this.service.getImages(query.data);

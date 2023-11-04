@@ -1,12 +1,9 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Button, TextField, Unstable_Grid2 as Grid } from '@mui/material';
 import { useState } from 'react';
 
 interface GalleryNavProps {
   page: number;
-  setPage: (val: number) => void;
+  setPage: (val: { page: number }) => void;
   totalPages: number;
 }
 
@@ -34,7 +31,7 @@ const NavButton = ({
 export const GalleryNav = ({ page, setPage, totalPages }: GalleryNavProps) => {
   const [currentPage, setCurrentPage] = useState(page);
   const changePage = (val: number) => {
-    setPage(val);
+    setPage({ page: val });
   };
   return (
     <Box>
@@ -56,19 +53,19 @@ export const GalleryNav = ({ page, setPage, totalPages }: GalleryNavProps) => {
                     value={page}
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setPage(e.target.value as unknown as number);
+                      setPage({ page: e.target.value as unknown as number });
                     }}
                     onBlur={() => {
                       if (!/[0-9]+/.test(page.toString())) {
-                        setPage(currentPage);
+                        setPage({ page: currentPage });
                         return;
                       }
                       if (page < 1) {
-                        setPage(currentPage);
+                        setPage({ page: currentPage });
                         return;
                       }
                       if (currentPage > totalPages) {
-                        setPage(totalPages);
+                        setPage({ page: totalPages });
                       }
                       setCurrentPage(page);
                     }}

@@ -1,7 +1,16 @@
+import { Folder } from '@gazer/shared/types';
 import { UserContext } from '@gazer/ui/store';
-import { postData } from '@gazer/ui/utils';
-import { Box, Button, TextField, Unstable_Grid2 as Grid } from '@mui/material';
-import { useContext, useState } from 'react';
+import { BASE_URL, postData } from '@gazer/ui/utils';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Unstable_Grid2 as Grid,
+} from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const UiNewImage = () => {
@@ -11,10 +20,12 @@ export const UiNewImage = () => {
     name: string;
     description: string;
     file: File | null;
+    parentId?: string;
   }>({
     name: '',
     description: '',
     file: null,
+    parentId: '',
   });
   const save = async () => {
     const formData = new FormData();
@@ -26,6 +37,24 @@ export const UiNewImage = () => {
     const data = await postData('image', formData, user);
     navigate(`/${data.id}`);
   };
+  const [existingFolders, setExistingFolders] = useState<Folder[]>([]);
+  useEffect(() => {
+    let ignore = false;
+    const getFolders = async () => {
+      const res = await fetch(`${BASE_URL}/folder`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data);
+      }
+      if (!ignore) {
+        setExistingFolders(data);
+      }
+    };
+    getFolders();
+    return () => {
+      ignore = true;
+    };
+  }, [setExistingFolders]);
   return (
     <Box>
       <Grid container justifyContent={'center'} alignItems="center" spacing={2}>
@@ -55,6 +84,26 @@ export const UiNewImage = () => {
             label="Description"
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
+        </Grid>
+        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
+          <Select
+            displayEmpty
+            id="existing-folders"
+            label="Folder"
+            value={form.parentId}
+            onChange={(e: SelectChangeEvent<string>) =>
+              setForm({ ...form, parentId: e.target.value })
+            }
+          >
+            <MenuItem value="" disabled>
+              <em>Choose a Parent Folder</em>
+            </MenuItem>
+            {existingFolders.map((folder) => (
+              <MenuItem key={folder.name} value={folder.id}>
+                {folder.name}
+              </MenuItem>
+            ))}
+          </Select>
         </Grid>
         <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
           <Button variant="contained" onClick={save}>

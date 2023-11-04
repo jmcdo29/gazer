@@ -1,10 +1,13 @@
 import { User, UserContext } from '@gazer/ui/store';
 import { postData } from '@gazer/ui/utils';
-import { Typography, useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextInput from '@mui/material/TextField';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Box,
+  Button,
+  TextField as TextInput,
+  Typography,
+  Unstable_Grid2 as Grid,
+  useTheme,
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
