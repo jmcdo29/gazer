@@ -1,25 +1,44 @@
+import { Folder } from '@gazer/shared/types';
 import { UserContext } from '@gazer/ui/store';
 import { BASE_URL, postData } from '@gazer/ui/utils';
-import { Box, Typography, Unstable_Grid2 as Grid } from '@mui/material';
+import {
+  Box,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+  Unstable_Grid2 as Grid,
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { EditableField } from './editable-field';
 import { ImageControls } from './image-controls';
 
-interface Image {
-  id: string;
-  url: string;
-  description?: string;
-  name: string;
-  index: number;
-}
-
 export function UiImage() {
   const user = useContext(UserContext);
   const { id: imageId } = useParams();
-  const [image, setImage] = useState<Image | undefined>(undefined);
-  const [tempImage, setTempImage] = useState<Image | undefined>(image);
+  const [image, setImage] = useState<
+    | {
+        id: string;
+        name: string;
+        folderId: string | null;
+        folderName?: string | null;
+        description: string | undefined;
+        url: string;
+      }
+    | undefined
+  >(undefined);
+  const [tempImage, setTempImage] = useState<
+    | {
+        id: string;
+        name: string;
+        folderId: string | null;
+        description: string | undefined;
+        url: string;
+      }
+    | undefined
+  >(image);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -40,6 +59,24 @@ export function UiImage() {
       ignore = true;
     };
   }, [setImage, imageId]);
+  const [existingFolders, setExistingFolders] = useState<Folder[]>([]);
+  useEffect(() => {
+    let ignore = false;
+    const getFolders = async () => {
+      const res = await fetch(`${BASE_URL}/folder`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data);
+      }
+      if (!ignore) {
+        setExistingFolders(data);
+      }
+    };
+    getFolders();
+    return () => {
+      ignore = true;
+    };
+  }, [setExistingFolders]);
   const save = async (val: boolean) => {
     if (!val && editing) {
       setEditing(false);
@@ -113,6 +150,37 @@ export function UiImage() {
                 {image.description}
               </Typography>
             </EditableField>
+          </Grid>
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {editing ? (
+              <Select
+                displayEmpty
+                id="existing-folders"
+                label="Folder"
+                value={image.folderId ?? ''}
+                onChange={(e: SelectChangeEvent<string>) =>
+                  setTempImage({ ...tempImage, folderId: e.target.value })
+                }
+              >
+                <MenuItem value="" disabled>
+                  <em>Choose a Parent Folder</em>
+                </MenuItem>
+                {existingFolders.map((folder) => (
+                  <MenuItem key={folder.name} value={folder.id}>
+                    {folder.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            ) : (
+              <Typography variant="body1" fontSize="1.5em">
+                {image.folderId}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       ) : (

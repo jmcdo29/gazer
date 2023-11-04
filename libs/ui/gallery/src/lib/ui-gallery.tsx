@@ -1,56 +1,61 @@
+import type { GetImages } from '@gazer/shared/types';
 import { UserContext } from '@gazer/ui/store';
-import { BASE_URL, postData } from '@gazer/ui/utils';
-import PinFirst from '@mui/icons-material/KeyboardDoubleArrowUp';
-import PushPin from '@mui/icons-material/PushPin';
-import { IconButton, useMediaQuery } from '@mui/material';
-import Box from '@mui/material/Box';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { BASE_URL } from '@gazer/ui/utils';
+import {
+  Box,
+  Button,
+  ImageList,
+  ImageListItem,
+  Unstable_Grid2 as Grid,
+  useMediaQuery,
+} from '@mui/material';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { Folder } from './folder';
 import { GalleryNav } from './gallery-nav';
+import { Image } from './image';
 
-interface Image {
-  id: string;
-  url: string;
-  description?: string;
-  name: string;
-  index: number;
-  sticky: boolean;
-  stickyIndex: number | null;
-}
-
-/* eslint-disable-next-line */
-export interface UiGalleryProps {}
-
-export function UiGallery(_props: UiGalleryProps) {
+export function UiGallery() {
   const user = useContext(UserContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const isNotSmallScreen = useMediaQuery('(min-width:600px)');
   const [page, setPage] = useState<number>(
     Number.parseInt(searchParams.get('page') ?? '1')
   );
-  const [images, setImages] = useState<Image[]>([]);
+  const [images, setImages] = useState<GetImages>([]);
   const [maxPage, setMaxPage] = useState(1);
   const navigate = useNavigate();
+  const historyIndex = window.history.state.idx;
+  const inFolder = searchParams.has('parentId');
   const setSearch = useCallback(
-    (val: number): void => {
-      if (val < 1) {
-        val = page;
+    (val: { page: number; parentId?: string }): void => {
+      let paramsHaveChanged = false;
+      const searchParamsObj: {
+        page: string;
+        latestIndex?: string;
+        parentId?: string;
+      } = {
+        page: val.page.toString(),
+      };
+      let newPage = val.page;
+      if (newPage < 1) {
+        newPage = page;
       }
-      if (val > maxPage) {
-        val = maxPage;
+      if (newPage > maxPage) {
+        newPage = maxPage;
       }
-      if (val !== page) {
-        setPage(val);
-        const searchParamsObj: { page: string; latestIndex?: string } = {
-          page: val.toString(),
-        };
+      if (newPage !== page) {
+        setPage(newPage);
+        paramsHaveChanged = true;
         // if (val !== 1) {
         //   searchParamsObj.latestIndex = images[images.length - 1].id.toString();
         // }
+      }
+      if (val.parentId) {
+        searchParamsObj.parentId = val.parentId;
+      }
+      if (paramsHaveChanged) {
         setSearchParams(searchParamsObj);
       }
     },
@@ -59,10 +64,14 @@ export function UiGallery(_props: UiGalleryProps) {
   useEffect(() => {
     let ignore = false;
     const getImages = async () => {
-      const url = `${BASE_URL}/image?page=${page}`;
+      const parentId = searchParams.get('parentId');
+      let url = `${BASE_URL}/image?page=${page}`;
       // if (page !== 1) {
       //   url += `&latestIndex=${images[images.length - 1].index}`;
       // }
+      if (parentId) {
+        url += `&parentId=${parentId}`;
+      }
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
@@ -77,7 +86,7 @@ export function UiGallery(_props: UiGalleryProps) {
         }
       }
       if (data.images.length === 0) {
-        setSearch(maxPage);
+        setSearch({ page: maxPage, parentId: parentId ?? undefined });
         return;
       }
     };
@@ -85,59 +94,35 @@ export function UiGallery(_props: UiGalleryProps) {
     return () => {
       ignore = true;
     };
-  }, [page, setSearch, maxPage]);
-  const pin = async (image: Image, first = false): Promise<void> => {
-    const body: { sticky: boolean; stickyIndex?: number } = {
-      sticky: !image.sticky,
-    };
-    if (first) {
-      body.stickyIndex = 1;
-    }
-    await postData(`image/${image.id}`, body, user, 'PATCH');
-  };
+  }, [page, setSearch, maxPage, searchParams]);
+
   return (
     <Box paddingX={'1em'}>
+      <Grid container>
+        <Grid>
+          {historyIndex && inFolder ? (
+            <Button onClick={() => navigate(-1)}>Go Back</Button>
+          ) : (
+            <Box />
+          )}
+        </Grid>
+        <Grid flexGrow={1} />
+        <Grid>
+          {user.id ? (
+            <Button onClick={() => navigate('/new/folder')}>New Folder</Button>
+          ) : (
+            <Box />
+          )}
+        </Grid>
+      </Grid>
       <ImageList cols={isNotSmallScreen ? 4 : 2} gap={16}>
         {images.map((image) => (
           <ImageListItem key={image.id} sx={{ cursor: 'pointer' }}>
-            <img
-              src={image.url}
-              alt={image.description}
-              loading="lazy"
-              onClick={() => {
-                navigate(image.id);
-              }}
-            />
-            <ImageListItemBar
-              title={image.name}
-              subtitle={image.description}
-              sx={{ paddingX: '0.5em', cursor: 'default' }}
-              actionIcon={
-                user.id ? (
-                  <>
-                    <IconButton
-                      color={image.sticky ? 'secondary' : 'primary'}
-                      onClick={() => pin(image)}
-                    >
-                      <PushPin />
-                    </IconButton>
-                    <IconButton
-                      color={
-                        image.sticky && image.stickyIndex === 1
-                          ? 'secondary'
-                          : 'primary'
-                      }
-                      onClick={() => pin(image, true)}
-                      disabled={image.stickyIndex === 1}
-                    >
-                      <PinFirst />
-                    </IconButton>
-                  </>
-                ) : (
-                  <div />
-                )
-              }
-            ></ImageListItemBar>
+            {image.type === 'image' ? (
+              <Image image={image} navigate={navigate} user={user} />
+            ) : (
+              <Folder folder={image} navigate={navigate} />
+            )}
           </ImageListItem>
         ))}
       </ImageList>

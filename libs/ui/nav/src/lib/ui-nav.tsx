@@ -2,10 +2,13 @@ import { User, UserContext } from '@gazer/ui/store';
 import AccountBox from '@mui/icons-material/AccountBox';
 import PlusIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Typography, useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Unstable_Grid2';
+import {
+  Box,
+  Link,
+  Typography,
+  Unstable_Grid2 as Grid,
+  useTheme,
+} from '@mui/material';
 import { useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -65,7 +68,7 @@ export function UiNav(props: UiNavProps) {
           marginRight={'0.5em'}
         >
           {user.id ? (
-            <Link component={RouterLink} to="/new" marginRight={'1em'}>
+            <Link component={RouterLink} to="/new/image" marginRight={'1em'}>
               <PlusIcon fontSize="large" color={'secondary'} />
             </Link>
           ) : (

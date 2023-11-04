@@ -1,3 +1,4 @@
+import { FolderModule } from '@gazer/server/folder';
 import { ImageModule } from '@gazer/server/image';
 import { ValidationPipe } from '@nest-lab/typeschema';
 import { Logger, Module } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { AppService } from './app.service';
       logLevel: 'VERBOSE',
     }),
     ImageModule,
+    FolderModule,
   ],
   controllers: [AppController],
   providers: [

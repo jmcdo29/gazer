@@ -11,33 +11,44 @@ import {
   Unstable_Grid2 as Grid,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export const UiNewImage = () => {
+export const UiUpdateFolder = () => {
   const user = useContext(UserContext);
   const navigate = useNavigate();
+  const params = useParams();
+  if (!params.id) {
+    throw new Error('This page can only be accessed with an id');
+  }
   const [form, setForm] = useState<{
+    id: string;
     name: string;
-    description: string;
-    file: File | null;
     parentId?: string;
   }>({
+    id: params.id,
     name: '',
-    description: '',
-    file: null,
     parentId: '',
   });
-  const save = async () => {
-    const formData = new FormData();
-    formData.set('name', form.name);
-    formData.set('description', form.description);
-    if (form.file) {
-      formData.set('file', form.file, form.name);
-    }
-    const data = await postData('image', formData, user);
-    navigate(`/${data.id}`);
-  };
   const [existingFolders, setExistingFolders] = useState<Folder[]>([]);
+  useEffect(() => {
+    let ignore = false;
+    const getFolders = async () => {
+      const res = await fetch(`${BASE_URL}/folder/${form.id}`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data);
+      }
+      if (!ignore) {
+        setForm({ ...data, parentId: data.parentId ?? '' });
+      }
+    };
+    if (!form.name) {
+      getFolders();
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [setForm, form]);
   useEffect(() => {
     let ignore = false;
     const getFolders = async () => {
@@ -50,11 +61,26 @@ export const UiNewImage = () => {
         setExistingFolders(data);
       }
     };
-    getFolders();
+    if (!form.name) {
+      getFolders();
+    }
     return () => {
       ignore = true;
     };
-  }, [setExistingFolders]);
+  }, [setExistingFolders, form]);
+  const save = async () => {
+    await postData(
+      `folder/${form.id}`,
+      { ...form, parentId: form.parentId || undefined },
+      user,
+      'PATCH'
+    );
+    let url = '/';
+    if (form.parentId) {
+      url += `?parentId=${form.parentId}`;
+    }
+    navigate(url);
+  };
   return (
     <Box>
       <Grid container justifyContent={'center'} alignItems="center" spacing={2}>
@@ -63,26 +89,8 @@ export const UiNewImage = () => {
             type="string"
             value={form.name}
             label="Name"
+            required={true}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="file"
-            inputProps={{ accept: 'image/*' }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              const file = files && files.length ? files[0] : null;
-              setForm({ ...form, file });
-            }}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="string"
-            value={form.description}
-            label="Description"
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
         </Grid>
         <Grid xs={9} display="flex" justifyContent="center" alignItems="center">

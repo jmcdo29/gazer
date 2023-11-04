@@ -13,30 +13,16 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const UiNewImage = () => {
+export const UiCreateFolder = () => {
   const user = useContext(UserContext);
   const navigate = useNavigate();
   const [form, setForm] = useState<{
     name: string;
-    description: string;
-    file: File | null;
     parentId?: string;
   }>({
     name: '',
-    description: '',
-    file: null,
     parentId: '',
   });
-  const save = async () => {
-    const formData = new FormData();
-    formData.set('name', form.name);
-    formData.set('description', form.description);
-    if (form.file) {
-      formData.set('file', form.file, form.name);
-    }
-    const data = await postData('image', formData, user);
-    navigate(`/${data.id}`);
-  };
   const [existingFolders, setExistingFolders] = useState<Folder[]>([]);
   useEffect(() => {
     let ignore = false;
@@ -55,6 +41,18 @@ export const UiNewImage = () => {
       ignore = true;
     };
   }, [setExistingFolders]);
+  const save = async () => {
+    await postData(
+      'folder',
+      { ...form, parentId: form.parentId || undefined },
+      user
+    );
+    let url = '/';
+    if (form.parentId) {
+      url += `?parentId=${form.parentId}`;
+    }
+    navigate(url);
+  };
   return (
     <Box>
       <Grid container justifyContent={'center'} alignItems="center" spacing={2}>
@@ -63,26 +61,8 @@ export const UiNewImage = () => {
             type="string"
             value={form.name}
             label="Name"
+            required={true}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="file"
-            inputProps={{ accept: 'image/*' }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              const file = files && files.length ? files[0] : null;
-              setForm({ ...form, file });
-            }}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="string"
-            value={form.description}
-            label="Description"
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
         </Grid>
         <Grid xs={9} display="flex" justifyContent="center" alignItems="center">

@@ -17,6 +17,7 @@ export const ImageSchema = object({
   index: number(),
   stickyIndex: nullable(number()),
   sticky: boolean(),
+  folderId: optional(string([ulid()])),
 });
 
 export type Image = Output<typeof ImageSchema>;

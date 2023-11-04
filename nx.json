@@ -56,6 +56,7 @@
       "library": {
         "style": "@emotion/styled",
         "linter": "eslint",
+        "bundler": "none",
         "unitTestRunner": "vitest"
       }
     }
