@@ -13,7 +13,7 @@ export const UpdateImageSchema = object({
   description: optional(string()),
   stickyIndex: optional(number()),
   sticky: optional(boolean()),
-  parentId: optional(string([ulid()])),
+  folderId: optional(string([ulid()])),
 });
 
 export type UpdateImage = Output<typeof UpdateImageSchema>;
