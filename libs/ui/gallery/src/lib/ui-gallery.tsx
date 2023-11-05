@@ -117,7 +117,13 @@ export function UiGallery() {
       </Grid>
       <ImageList cols={isNotSmallScreen ? 4 : 2} gap={16}>
         {images.map((image) => (
-          <ImageListItem key={image.id} sx={{ cursor: 'pointer' }}>
+          <ImageListItem
+            key={image.id}
+            sx={{
+              cursor: 'pointer',
+              width: isNotSmallScreen ? '23.3vw' : '39.9vw',
+            }}
+          >
             {image.type === 'image' ? (
               <Image image={image} navigate={navigate} user={user} />
             ) : (

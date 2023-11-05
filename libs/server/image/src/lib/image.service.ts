@@ -85,7 +85,7 @@ export class ImageService {
         'i.folderId',
         'f.name as folderName',
       ])
-      .where('id', '=', id)
+      .where('i.id', '=', id)
       .executeTakeFirstOrThrow();
   }
 
