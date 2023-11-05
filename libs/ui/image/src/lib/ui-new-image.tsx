@@ -1,4 +1,4 @@
-import { Folder } from '@gazer/shared/types';
+import { CreateImage, Folder } from '@gazer/shared/types';
 import { UserContext } from '@gazer/ui/store';
 import { BASE_URL, postData } from '@gazer/ui/utils';
 import {
@@ -16,21 +16,16 @@ import { useNavigate } from 'react-router-dom';
 export const UiNewImage = () => {
   const user = useContext(UserContext);
   const navigate = useNavigate();
-  const [form, setForm] = useState<{
-    name: string;
-    description: string;
-    file: File | null;
-    parentId?: string;
-  }>({
+  const [form, setForm] = useState<CreateImage & { file: File | null }>({
     name: '',
     description: '',
     file: null,
-    parentId: '',
+    folderId: '',
   });
   const save = async () => {
     const formData = new FormData();
     formData.set('name', form.name);
-    formData.set('description', form.description);
+    formData.set('description', form.description ?? '');
     if (form.file) {
       formData.set('file', form.file, form.name);
     }
@@ -90,9 +85,9 @@ export const UiNewImage = () => {
             displayEmpty
             id="existing-folders"
             label="Folder"
-            value={form.parentId}
+            value={form.folderId}
             onChange={(e: SelectChangeEvent<string>) =>
-              setForm({ ...form, parentId: e.target.value })
+              setForm({ ...form, folderId: e.target.value })
             }
           >
             <MenuItem value="" disabled>

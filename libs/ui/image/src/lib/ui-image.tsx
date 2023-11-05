@@ -1,4 +1,4 @@
-import { Folder } from '@gazer/shared/types';
+import { Folder, UpdateImage } from '@gazer/shared/types';
 import { UserContext } from '@gazer/ui/store';
 import { BASE_URL, postData } from '@gazer/ui/utils';
 import {
@@ -19,25 +19,10 @@ export function UiImage() {
   const user = useContext(UserContext);
   const { id: imageId } = useParams();
   const [image, setImage] = useState<
-    | {
-        id: string;
-        name: string;
-        folderId: string | null;
-        folderName?: string | null;
-        description: string | undefined;
-        url: string;
-      }
-    | undefined
+    (UpdateImage & { id: string; url: string }) | undefined
   >(undefined);
   const [tempImage, setTempImage] = useState<
-    | {
-        id: string;
-        name: string;
-        folderId: string | null;
-        description: string | undefined;
-        url: string;
-      }
-    | undefined
+    (UpdateImage & { id: string; url: string }) | undefined
   >(image);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
@@ -89,7 +74,11 @@ export function UiImage() {
     }
     await postData(
       `image/${image?.id}`,
-      { name: tempImage?.name, description: tempImage?.description },
+      {
+        name: tempImage?.name,
+        description: tempImage?.description,
+        folderId: tempImage?.folderId,
+      },
       user,
       'PATCH'
     );
