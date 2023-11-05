@@ -19,10 +19,10 @@ export function UiImage() {
   const user = useContext(UserContext);
   const { id: imageId } = useParams();
   const [image, setImage] = useState<
-    (UpdateImage & { id: string; url: string }) | undefined
+    (UpdateImage & { id: string; url: string; folderName: string }) | undefined
   >(undefined);
   const [tempImage, setTempImage] = useState<
-    (UpdateImage & { id: string; url: string }) | undefined
+    (UpdateImage & { id: string; url: string; folderName: string }) | undefined
   >(image);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
@@ -166,9 +166,7 @@ export function UiImage() {
                 ))}
               </Select>
             ) : (
-              <Typography variant="body1" fontSize="1.5em">
-                {image.folderId}
-              </Typography>
+              ''
             )}
           </Grid>
         </Grid>
