@@ -127,18 +127,20 @@ export function UiImage() {
               />
             </Box>
           </Grid>
-          <Grid>
-            <EditableField
-              value={tempImage?.description ?? ''}
-              editing={editing}
-              setField={(val: string) =>
-                setTempImage({ ...tempImage, description: val })
-              }
-            >
-              <Typography variant="body1" fontSize="1.5em">
-                {image.description}
-              </Typography>
-            </EditableField>
+          <Grid container columns={1} justifyContent="center" xs={9}>
+            <Grid>
+              <EditableField
+                value={tempImage?.description ?? ''}
+                editing={editing}
+                setField={(val: string) =>
+                  setTempImage({ ...tempImage, description: val })
+                }
+              >
+                <Typography variant="body1" fontSize="1.5em">
+                  {image.description}
+                </Typography>
+              </EditableField>
+            </Grid>
           </Grid>
           <Grid
             xs={9}
@@ -151,7 +153,7 @@ export function UiImage() {
                 displayEmpty
                 id="existing-folders"
                 label="Folder"
-                value={image.folderId ?? ''}
+                value={tempImage.folderId ?? ''}
                 onChange={(e: SelectChangeEvent<string>) =>
                   setTempImage({ ...tempImage, folderId: e.target.value })
                 }
@@ -165,6 +167,8 @@ export function UiImage() {
                   </MenuItem>
                 ))}
               </Select>
+            ) : user?.id ? (
+              <Typography>Folder: {image.folderName}</Typography>
             ) : (
               ''
             )}
