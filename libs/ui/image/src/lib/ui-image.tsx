@@ -19,10 +19,10 @@ export function UiImage() {
   const user = useContext(UserContext);
   const { id: imageId } = useParams();
   const [image, setImage] = useState<
-    (UpdateImage & { id: string; url: string }) | undefined
+    (UpdateImage & { id: string; url: string; folderName: string }) | undefined
   >(undefined);
   const [tempImage, setTempImage] = useState<
-    (UpdateImage & { id: string; url: string }) | undefined
+    (UpdateImage & { id: string; url: string; folderName: string }) | undefined
   >(image);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
@@ -127,18 +127,20 @@ export function UiImage() {
               />
             </Box>
           </Grid>
-          <Grid>
-            <EditableField
-              value={tempImage?.description ?? ''}
-              editing={editing}
-              setField={(val: string) =>
-                setTempImage({ ...tempImage, description: val })
-              }
-            >
-              <Typography variant="body1" fontSize="1.5em">
-                {image.description}
-              </Typography>
-            </EditableField>
+          <Grid container columns={1} justifyContent="center" xs={9}>
+            <Grid>
+              <EditableField
+                value={tempImage?.description ?? ''}
+                editing={editing}
+                setField={(val: string) =>
+                  setTempImage({ ...tempImage, description: val })
+                }
+              >
+                <Typography variant="body1" fontSize="1.5em">
+                  {image.description}
+                </Typography>
+              </EditableField>
+            </Grid>
           </Grid>
           <Grid
             xs={9}
@@ -151,7 +153,7 @@ export function UiImage() {
                 displayEmpty
                 id="existing-folders"
                 label="Folder"
-                value={image.folderId ?? ''}
+                value={tempImage.folderId ?? ''}
                 onChange={(e: SelectChangeEvent<string>) =>
                   setTempImage({ ...tempImage, folderId: e.target.value })
                 }
@@ -165,10 +167,10 @@ export function UiImage() {
                   </MenuItem>
                 ))}
               </Select>
+            ) : user?.id ? (
+              <Typography>Folder: {image.folderName}</Typography>
             ) : (
-              <Typography variant="body1" fontSize="1.5em">
-                {image.folderId}
-              </Typography>
+              ''
             )}
           </Grid>
         </Grid>
