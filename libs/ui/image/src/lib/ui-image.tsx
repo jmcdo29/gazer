@@ -82,7 +82,12 @@ export function UiImage() {
       user,
       'PATCH'
     );
-    setImage(tempImage);
+    const folderName = existingFolders.find(
+      (f) => f.id === tempImage?.folderId
+    )?.name;
+    if (tempImage) {
+      setImage({ ...tempImage, folderName: folderName ?? '' });
+    }
     setEditing(false);
   };
   const deleteImage = async () => {
