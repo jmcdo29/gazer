@@ -14,6 +14,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const UiNewImage = () => {
+  const reader = new FileReader();
   const user = useContext(UserContext);
   const navigate = useNavigate();
   const [form, setForm] = useState<CreateImage & { file: File | null }>({
@@ -22,6 +23,7 @@ export const UiNewImage = () => {
     file: null,
     folderId: '',
   });
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const save = async () => {
     const formData = new FormData();
     formData.set('name', form.name);
@@ -52,58 +54,113 @@ export const UiNewImage = () => {
   }, [setExistingFolders]);
   return (
     <Box>
-      <Grid container justifyContent={'center'} alignItems="center" spacing={2}>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="string"
-            value={form.name}
-            label="Name"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="file"
-            inputProps={{ accept: 'image/*' }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const files = e.target.files;
-              const file = files && files.length ? files[0] : null;
-              setForm({ ...form, file });
-            }}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <TextField
-            type="string"
-            value={form.description}
-            label="Description"
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
-        </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <Select
-            displayEmpty
-            id="existing-folders"
-            label="Folder"
-            value={form.folderId}
-            onChange={(e: SelectChangeEvent<string>) =>
-              setForm({ ...form, folderId: e.target.value })
-            }
+      <Grid container columns={2}>
+        <Grid
+          container
+          justifyContent={'center'}
+          alignItems="center"
+          spacing={2}
+          xs={1}
+        >
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
           >
-            <MenuItem value="" disabled>
-              <em>Choose a Parent Folder</em>
-            </MenuItem>
-            {existingFolders.map((folder) => (
-              <MenuItem key={folder.name} value={folder.id}>
-                {folder.name}
+            <TextField
+              type="string"
+              value={form.name}
+              label="Name"
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </Grid>
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <TextField
+              type="file"
+              inputProps={{ accept: 'image/*' }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const files = e.target.files;
+                const file = files && files.length ? files[0] : null;
+                setForm({ ...form, file });
+                reader.onload = (e) => {
+                  setImageUrl(e.target?.result?.toString() ?? undefined);
+                };
+                if (file) {
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+          </Grid>
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <TextField
+              type="string"
+              value={form.description}
+              label="Description"
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
+          </Grid>
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Select
+              displayEmpty
+              id="existing-folders"
+              label="Folder"
+              value={form.folderId}
+              onChange={(e: SelectChangeEvent<string>) =>
+                setForm({ ...form, folderId: e.target.value })
+              }
+            >
+              <MenuItem value="" disabled>
+                <em>Choose a Parent Folder</em>
               </MenuItem>
-            ))}
-          </Select>
+              {existingFolders.map((folder) => (
+                <MenuItem key={folder.name} value={folder.id}>
+                  {folder.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+          <Grid
+            xs={9}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Button variant="contained" onClick={save}>
+              Submit
+            </Button>
+          </Grid>
         </Grid>
-        <Grid xs={9} display="flex" justifyContent="center" alignItems="center">
-          <Button variant="contained" onClick={save}>
-            Submit
-          </Button>
+        <Grid xs={1}>
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={'To be uploaded'}
+              style={{
+                width: 'inherit',
+                objectFit: 'cover',
+              }}
+            />
+          ) : (
+            ''
+          )}
         </Grid>
       </Grid>
     </Box>
