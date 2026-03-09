@@ -4,6 +4,8 @@ import { style } from '@ogma/styler';
 import { execSync, spawn } from 'child_process';
 
 import { BuildExecutorSchema } from './schema';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
 export default async function runExecutor(
   options: BuildExecutorSchema,
@@ -16,7 +18,7 @@ export default async function runExecutor(
       logLevel: options?.verbose ? 'VERBOSE' : 'LOG',
     });
     try {
-      const scope = context.nxJsonConfiguration?.npmScope;
+      const scope = 'gazer';
       logger.verbose(`Project scope was determined to be ${scope}`);
       logger.verbose(`Project name was determined to be ${project}`);
       const cachePath = options.cachePath ?? `docker/cache/${project}`;
