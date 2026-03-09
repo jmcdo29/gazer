@@ -11,11 +11,7 @@ import {
 export const UiFooter = (): JSX.Element => {
   const theme = useTheme();
   return (
-    <Box
-      sx={{
-        backgroundColor: theme.palette.background.default,
-      }}
-    >
+    <Box bgcolor={theme.palette.background.default}>
       <Divider />
       <Grid
         container
