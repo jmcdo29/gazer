@@ -1,10 +1,8 @@
-FROM node:20.2-alpine3.18 as gazer-node
+FROM node:24.14-alpine3.23 AS gazer-node
 
-
-RUN npm i -g pnpm@8.6.10 && \
+RUN npm i -g pnpm@10.22.0 && \
   apk add --no-cache \
-  dumb-init=1.2.5-r2
-
+  dumb-init=1.2.5-r3
 FROM gazer-node AS gazer-common
 
 WORKDIR /src
@@ -28,7 +26,7 @@ COPY libs/ui ./libs/ui
 COPY libs/shared ./libs/shared/
 RUN VITE_SERVER_URL="https://api.clippyclips.net" pnpm nx run ui:build:production
 
-FROM caddy:2.6.4-alpine as ui-prod
+FROM caddy:2.11.2-alpine AS ui-prod
 LABEL description="The ClippyClips webui image, ran via a Caddy reverse proxy"
 WORKDIR /src
 COPY apps/ui/robots.txt ./dist/apps/ui/robots.txt
