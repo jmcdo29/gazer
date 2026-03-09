@@ -1,9 +1,8 @@
-FROM node:20.2-alpine3.18 as gazer-node
+FROM node:24.14-alpine3.23 AS gazer-node
 
-
-RUN npm i -g pnpm@8.6.10 && \
+RUN npm i -g pnpm@10.22.0 && \
   apk add --no-cache \
-  dumb-init=1.2.5-r2
+  dumb-init=1.2.5-r3
 
 FROM gazer-node AS gazer-common
 
