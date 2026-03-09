@@ -44,3 +44,5 @@ apps/ui/public
 docker/
 !libs/plugins/docker/
 caddy.prod.json
+
+.nx/cache

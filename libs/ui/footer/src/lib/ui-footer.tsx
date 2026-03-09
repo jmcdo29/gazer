@@ -29,7 +29,7 @@ export const UiFooter = (): JSX.Element => {
             display="inline-flex"
             color="primary"
           >
-            <Typography component={Box}>Jay McDoniel</Typography>
+            <Typography component={Box}>Jackie McDoniel</Typography>
           </Link>
         </Grid>
       </Grid>
