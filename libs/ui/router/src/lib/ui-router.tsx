@@ -24,7 +24,9 @@ const Root = ({ setUser }: RootProps) => {
     <Box>
       <UiNav setUser={setUser} />
       <Box
-        bgcolor={theme.palette.background.default}
+        sx={{
+          'background-image': `linear-gradient(to top, ${theme.palette.background.default}, ${theme.palette.background.paper})`,
+        }}
         minHeight="85vh"
         padding={`${theme.spacing(3)} ${theme.spacing(2)}`}
       >

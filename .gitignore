@@ -46,3 +46,4 @@ docker/
 caddy.prod.json
 
 .nx/cache
+.nx/workspace-data

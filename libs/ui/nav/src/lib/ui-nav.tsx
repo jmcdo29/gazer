@@ -37,7 +37,9 @@ export function UiNav(props: UiNavProps) {
       role="navigation"
       aria-roledescription="navigation"
       height={'3em'}
-      bgcolor={theme.palette.primary.dark}
+      sx={{
+        'background-image': `linear-gradient(to bottom right, ${theme.palette.primary.light}, ${theme.palette.primary.dark})`,
+      }}
     >
       <Grid container>
         <Grid xs marginLeft={'0.5em'}>
