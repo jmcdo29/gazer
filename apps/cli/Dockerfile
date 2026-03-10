@@ -1,6 +1,6 @@
 FROM node:24.14-alpine3.23 AS gazer-node
 
-RUN npm i -g pnpm@10.22.0 && \
+RUN npm i -g pnpm@10.32.0 && \
   apk add --no-cache \
   dumb-init=1.2.5-r3
 
@@ -16,6 +16,7 @@ COPY package.json \
   tsconfig* \
   nx.json \
   pnpm-lock.yaml \
+  pnpm-workspace.yaml \
   ./
 ENV CYPRESS_INSTALL_BINARY=0
 RUN pnpm i
@@ -32,6 +33,7 @@ LABEL description="The image that runs migrations for the ClippyClips Database. 
 USER node
 WORKDIR /src
 COPY --from=cli-build --chown=node:node /src/dist ./dist
+COPY --from=cli-build --chown=node:node /src/pnpm-workspace.yaml ./
 RUN cp ./dist/apps/cli/package.json ./package.json
 ENV NODE_ENV=production
 RUN pnpm i
